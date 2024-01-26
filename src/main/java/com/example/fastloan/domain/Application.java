@@ -44,7 +44,16 @@ public class Application extends BaseEntity {
     @Column(columnDefinition = "decimal(15,2) DEFAULT NULL COMMENT '대출 신청 금액'")
     private BigDecimal hopeAmount;
 
+    @Column(columnDefinition = "decimal(15,2) DEFAULT NULL COMMENT '대출 승인 금액'")
+    private BigDecimal approvalAmount;
+
+
     @Column(columnDefinition = "datetime DEFAULT NULL COMMENT '대출 신청 일자'")
     private LocalDateTime appliedAt;
+
+    @Column(columnDefinition = "datetime DEFAULT NULL COMMENT '대출 계약 일자'")
+    private LocalDateTime contractedAt;
+
+
 
 }

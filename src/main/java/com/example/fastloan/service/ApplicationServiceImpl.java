@@ -1,12 +1,14 @@
 package com.example.fastloan.service;
 
 import com.example.fastloan.domain.Application;
+import com.example.fastloan.domain.Judgement;
 import com.example.fastloan.domain.Terms;
 import com.example.fastloan.dto.ApplicationDTO.*;
 import com.example.fastloan.exception.BaseException;
 import com.example.fastloan.exception.ResultType;
 import com.example.fastloan.repository.AcceptTermsRepository;
 import com.example.fastloan.repository.ApplicationRepository;
+import com.example.fastloan.repository.JudgementRepository;
 import com.example.fastloan.repository.TermsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,8 +29,9 @@ import java.util.stream.Collectors;
 public class ApplicationServiceImpl implements ApplicationService{
 
     private final ApplicationRepository applicationRepository;
-    private final TermsRepository termsRepository;
     private final AcceptTermsRepository acceptTermsRepository;
+    private final JudgementRepository judgementRepository;
+    private final TermsRepository termsRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -109,5 +113,26 @@ public class ApplicationServiceImpl implements ApplicationService{
         }
 
         return savedAcceptTermsList.size() == acceptTermsIdList.size();
+    }
+
+    @Override
+    public Response contract(Long applicationId) {
+        // 신청 정보가 있는지 체크
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+        // 신청한 정보에 대한 심사 정보가 있는지 체크
+        Judgement judgement = judgementRepository.findByApplicationId(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });;
+        // 승인 금액 > 0 검증
+        if(judgement.getApprovalAmount() == null || judgement.getApprovalAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+        //계약 체결
+        application.setContractedAt(LocalDateTime.now());
+        applicationRepository.save(application);
+
+        return null;
     }
 }

@@ -31,9 +31,10 @@ public class ApplicationDTO implements Serializable {
         private String cellPhone;
         private String email;
         private BigDecimal hopeAmount;
+        private BigDecimal approvalAmount;
 
         private LocalDateTime appliedAt;
-
+        private LocalDateTime contractedAt;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
@@ -45,5 +46,17 @@ public class ApplicationDTO implements Serializable {
     @Setter
     public static class AcceptTerms {
         private List<Long> acceptTermsId;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Getter
+    @Setter
+    public static class GrantAmount {
+        private Long applicationId;
+        private BigDecimal approvalAmount;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
 }
