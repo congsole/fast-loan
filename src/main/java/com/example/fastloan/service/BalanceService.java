@@ -1,9 +1,12 @@
 package com.example.fastloan.service;
 
+import com.example.fastloan.domain.Repayment;
 import com.example.fastloan.dto.BalanceDTO;
+import com.example.fastloan.dto.BalanceDTO.*;
 
 public interface BalanceService {
-    BalanceDTO.Response create(Long applicationId, BalanceDTO.Request request);
+    Response create(Long applicationId, Request request);
 
-    BalanceDTO.Response update(Long applicationId, BalanceDTO.UpdateRequest request);
+    Response update(Long applicationId, UpdateRequest request);
+    Response repaymentUpdate(Long applicationId, RepaymentRequest request);
 }

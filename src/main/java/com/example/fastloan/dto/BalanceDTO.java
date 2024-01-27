@@ -30,15 +30,26 @@ public class BalanceDTO implements Serializable {
     @Builder
     @Getter
     @Setter
+    public static class RepaymentRequest {
+        private BigDecimal repaymentAmount;
+        private RepaymentType type;
+        public enum RepaymentType {ADD, REMOVE}
+    }
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    @Getter
+    @Setter
     public static class Response {
-        private Long balanceId;
 
+        private Long balanceId;
         private Long applicationId;
         private BigDecimal entryAmount;
-        private BigDecimal balanceAmount;
 
+        private BigDecimal balance;
         private LocalDateTime appliedAt;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+
     }
 }
