@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.2'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'com.google.cloud.tools.jib' version '3.2.0'
 }
 
 group = 'com.example'
@@ -21,13 +22,34 @@ repositories {
     mavenCentral()
 }
 
+jib {
+    from {
+        image = 'openjdk:17'
+    }
+    to {
+        image = 'fastcampus-loan'
+        tags = ['0.0.1']
+    }
+    container {
+        mainClass = 'com.example.fastloan.FastLoanApplication'
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        format = 'OCI'
+        volumes = ['/var/tmp']
+        entrypoint = [
+                'java',
+                '-cp',
+                '/app/resources:/app/classes:/app/libs/*',
+                'com.example.fastloan.FastLoanApplication'
+        ]
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.modelmapper:modelmapper:3.1.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
